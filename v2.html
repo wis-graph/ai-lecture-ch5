@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5강 한눈에 보기 | 그래서 우리는 무엇을 해야 하는가</title>
+<style>
+:root{
+  --paper:#FAF4E4; --ink:#2B2620; --ink-soft:#6E6353; --card:#FFFDF6;
+  --marker:#E8962F; --marker-soft:rgba(240,162,79,.30); --line:#E2D5B6;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper); color:var(--ink); font-family:'Apple SD Gothic Neo','Pretendard','Noto Sans KR',sans-serif; font-size:16px; line-height:1.75; word-break:keep-all}
+main{max-width:860px; margin:0 auto; padding:0 20px 120px}
+p{margin:0 0 1em}
+strong{font-weight:700}
+a{color:var(--ink)}
+/* hero */
+header.hero{max-width:980px; margin:0 auto; padding:56px 20px 6px; text-align:center}
+.hero .kicker{display:inline-block; font-weight:800; letter-spacing:.2em; color:var(--marker); font-size:.9rem; margin-bottom:12px}
+.hero h1{font-size:clamp(1.5rem,4vw,2.3rem); line-height:1.35; font-weight:800; margin-bottom:8px}
+.hero .sub{color:var(--ink-soft); font-size:1.02rem; margin-bottom:6px}
+.hero .note{font-size:.83rem; color:var(--ink-soft); opacity:.85}
+.hero .note a{color:var(--marker); font-weight:700}
+figure.diagram{margin:26px 0}
+figure.diagram img{width:100%; display:block; border:1.5px solid var(--line); border-radius:14px; background:#FCF7E9}
+figure.diagram figcaption{font-size:.83rem; color:var(--ink-soft); text-align:center; margin-top:8px}
+/* thesis */
+.thesis{max-width:860px; margin:10px auto 0; padding:0 20px}
+.thesis .box{background:var(--card); border:1.5px solid var(--ink); border-radius:12px; padding:18px 22px; box-shadow:4px 4px 0 rgba(43,38,32,.10); font-size:1.02rem}
+.thesis .box b{background:linear-gradient(transparent 62%, var(--marker-soft) 62%)}
+/* toc */
+nav.toc{max-width:860px; margin:22px auto 60px; padding:0 20px}
+nav.toc ol{list-style:none; display:flex; flex-wrap:wrap; gap:8px; counter-reset:toc; justify-content:center}
+nav.toc li{counter-increment:toc}
+nav.toc a{display:inline-block; text-decoration:none; font-size:.85rem; font-weight:700; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 14px}
+nav.toc a::before{content:counter(toc,decimal-leading-zero); color:var(--marker); margin-right:7px; font-weight:800}
+nav.toc a:hover{background:var(--marker-soft)}
+/* sections */
+section{margin-top:76px}
+.sec-label{font-weight:800; color:var(--marker); letter-spacing:.15em; font-size:.82rem}
+h2{font-size:1.5rem; line-height:1.4; font-weight:800; margin:4px 0 6px}
+h2 .hl, .hl{background:linear-gradient(transparent 62%, var(--marker-soft) 62%)}
+.sec-one{color:var(--ink-soft); font-size:.98rem; margin-bottom:20px}
+h3{font-size:1.06rem; font-weight:800; margin:30px 0 12px}
+h3::before{content:''; display:inline-block; width:11px; height:11px; background:var(--marker); border-radius:3px; margin-right:8px; transform:rotate(-8deg)}
+/* summary list */
+.sum{list-style:none; margin:14px 0; display:flex; flex-direction:column; gap:8px}
+.sum li{padding-left:26px; position:relative; font-size:.97rem}
+.sum li::before{content:'→'; position:absolute; left:0; color:var(--marker); font-weight:800}
+/* stat row */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:18px 0}
+.stat{background:var(--card); border:1.5px solid var(--ink); border-radius:12px; padding:14px 16px; box-shadow:3px 3px 0 rgba(43,38,32,.09); text-align:center}
+.stat .n{display:block; font-size:1.7rem; font-weight:800; line-height:1.25}
+.stat .n small{font-size:.95rem}
+.stat .l{font-size:.8rem; color:var(--ink-soft); line-height:1.5; display:block; margin-top:4px}
+/* chips */
+.chips{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin:14px 0}
+.chip{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 15px; font-size:.9rem; line-height:1.6}
+.chip b{display:block; margin-bottom:2px}
+.chip b::before{content:'●'; color:var(--marker); font-size:.7rem; margin-right:7px; vertical-align:1px}
+.chips.numbered{counter-reset:ch}
+.chips.numbered .chip{counter-increment:ch}
+.chips.numbered .chip b::before{content:counter(ch); color:#fff; background:var(--marker); font-size:.72rem; border-radius:50%; padding:1px 6px; margin-right:8px}
+/* callout */
+.callout{border-left:5px solid var(--marker); background:var(--marker-soft); border-radius:0 10px 10px 0; padding:13px 18px; margin:20px 0; font-weight:700; font-size:.98rem}
+/* charts */
+.chart{background:var(--card); border:1.5px solid var(--ink); border-radius:12px; padding:18px 20px; margin:20px 0; box-shadow:4px 4px 0 rgba(43,38,32,.10)}
+.chart .chart-title{font-weight:800; margin-bottom:2px; font-size:.95rem}
+.chart .chart-sub{font-size:.8rem; color:var(--ink-soft); margin-bottom:14px}
+.bar-row{display:grid; grid-template-columns:120px 1fr 58px; align-items:center; gap:10px; margin:8px 0}
+.bar-row .lab{font-size:.86rem; font-weight:700; text-align:right}
+.bar-row .track{background:rgba(43,38,32,.06); border-radius:5px; height:22px; position:relative}
+.bar-row .fill{position:absolute; inset:0 auto 0 0; background:var(--marker); border-radius:4px; opacity:.9}
+.bar-row.ghost .fill{background:var(--ink-soft); opacity:.55}
+.bar-row .val{font-weight:800; font-size:.88rem}
+.chart .chart-note{font-size:.79rem; color:var(--ink-soft); margin-top:10px}
+/* stacked portfolio bar */
+.stackbar{display:flex; height:30px; border-radius:6px; overflow:hidden; border:1.5px solid var(--ink); margin:10px 0 6px}
+.stackbar div{display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:800; color:#fff}
+.sb1{background:#C9762A}.sb2{background:#E8962F}.sb3{background:#8A7A5C}.sb4{background:#4E463A}
+.sb-legend{display:flex; flex-wrap:wrap; gap:12px; font-size:.78rem; color:var(--ink-soft)}
+.sb-legend i{display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px}
+/* matrix table */
+.tablewrap{overflow-x:auto; margin:18px 0}
+table.mx{width:100%; border-collapse:collapse; background:var(--card); border:1.5px solid var(--ink); font-size:.85rem; line-height:1.55}
+table.mx th, table.mx td{padding:9px 12px; border:1px solid var(--line); text-align:left; vertical-align:top}
+table.mx thead th{background:var(--marker-soft); font-weight:800; white-space:nowrap}
+table.mx tbody th{font-weight:800; background:rgba(43,38,32,.03); white-space:nowrap}
+/* versus (약속 vs 현실 등) */
+.versus{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0}
+.versus .side{background:var(--card); border:1.5px solid var(--ink); border-radius:12px; padding:14px 16px; font-size:.9rem}
+.versus .side h5{font-size:.85rem; font-weight:800; color:var(--marker); margin-bottom:8px}
+.versus .side ul{list-style:none; display:flex; flex-direction:column; gap:5px}
+.versus .side li::before{content:'· '; color:var(--marker); font-weight:800}
+@media (max-width:600px){ .versus{grid-template-columns:1fr} .bar-row{grid-template-columns:88px 1fr 52px} }
+/* quotes compact */
+.q{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--marker); border-radius:0 10px 10px 0; padding:12px 16px; margin:10px 0; font-size:.92rem}
+.q cite{font-style:normal; font-weight:800; color:var(--ink-soft); font-size:.82rem}
+/* full text link */
+.orig{margin:22px 0 0; text-align:right}
+.orig a{font-size:.85rem; font-weight:700; color:var(--marker); text-decoration:none; border-bottom:1.5px dashed var(--marker)}
+/* timeline mini */
+.tl{display:flex; flex-direction:column; gap:6px; margin:14px 0}
+.tl .row{display:grid; grid-template-columns:120px 1fr; gap:12px; font-size:.9rem}
+.tl .row .yr{font-weight:800; color:var(--marker); text-align:right}
+.closing{background:var(--card); border:1.5px solid var(--ink); border-radius:14px; padding:24px 26px; margin-top:44px; box-shadow:5px 5px 0 rgba(43,38,32,.10); font-size:1.02rem}
+.top-link{display:block; text-align:center; margin-top:56px}
+.top-link a{color:var(--ink-soft); text-decoration:none; font-size:.85rem; border-bottom:1px dashed var(--line)}
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <span class="kicker">5강 · 한눈에 보기</span>
+  <h1>그래서 우리는 무엇을 해야 하는가</h1>
+  <p class="sub">대한민국의 미래와 AI 기본사회를 향하여</p>
+  <p class="note">《박태웅의 AI 강의 2026》 요약·시각화 판 — 각 섹션 끝의 링크로 <a href="index.html">원문 전문판</a>과 오갈 수 있습니다</p>
+  <figure class="diagram">
+    <img src="images/viz5_d1_논증지도.jpg" alt="5강 전체 논증 지도: 3무에서 생태계 관점을 거쳐 지역 금융·인재 생태계·데이터 공유 연대로, 다시 독파모·K-휴머노이드로 모이고, 낡은 제도라는 장애물을 넘어 AI 기본사회에 이르는 여정">
+  </figure>
+</header>
+
+<div class="thesis">
+  <div class="box">이 장의 한 줄 — 제조강국 한국의 AI 전환은 <b>돈·사람·데이터 3無를 ‘생태계’로 함께</b> 풀어야 하고, 조달·교육·보안 같은 <b>낡은 제도</b>를 넘어, 그 과실을 모두가 나누는 <b>AI 기본사회</b>로 가자는 제안.</div>
+</div>
+
+<nav class="toc">
+  <ol>
+    <li><a href="#s1">3無와 생태계</a></li>
+    <li><a href="#s2">지역 금융</a></li>
+    <li><a href="#s3">인재 생태계</a></li>
+    <li><a href="#s4">데이터 연대</a></li>
+    <li><a href="#s5">독파모·K-휴머노이드</a></li>
+    <li><a href="#s6">불화하는 제도</a></li>
+    <li><a href="#s7">AI 정부</a></li>
+    <li><a href="#s8">AI 기본사회</a></li>
+    <li><a href="#s9">태양광 연금</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="s1">
+  <span class="sec-label">SECTION 01</span>
+  <h2><span class="hl">AI 전환의 걸림돌과 생태계적 관점의 부재</span></h2>
+  <p class="sec-one">한국 제조 중소·중견기업에는 세 가지가 없다 — 그리고 셋은 얽혀 있어 따로 풀 수 없다.</p>
+
+  <div class="stats">
+    <div class="stat"><span class="n">80.7<small>%</small></span><span class="l">“AI 전문 인력이 없다” (충원도 안 함 82.1%)</span></div>
+    <div class="stat"><span class="n">73.6<small>%</small></span><span class="l">“AI 투자가 부담” (중소기업은 79.7%)</span></div>
+    <div class="stat"><span class="n">파편화</span><span class="l">설비별로 분절된 제조 데이터 · 레거시 시스템</span></div>
+  </div>
+
+  <figure class="diagram">
+    <img src="images/viz5_d2_3무삼각형.jpg" alt="사람 없음, 돈 없음, 데이터 없음이 서로 얽힌 삼각형. 가운데에 '함께 풀어야 한다'">
+    <figcaption>돈이 없으면 사람·데이터를 못 풀고, 사람이 없으면 진도가 안 나가고, 데이터가 없으면 무망하다</figcaption>
+  </figure>
+
+  <h3>생태계로 접근하지 않아 실패했다 — 세 가지 반면교사</h3>
+  <div class="chips">
+    <div class="chip"><b>삼성전자 파운드리</b>파운드리는 팹리스–디자인–IP–파운드리–패키징의 생태계 전쟁. IP 파트너 10배 적고 패키징 10년 뒤처진 채 홀로 싸웠다.</div>
+    <div class="chip"><b>혁신도시</b>허허벌판에 건물만 꽂았다. 배우자 일자리가 없어 맞벌이 부부는 “안 가는 게 아니라 못 간다”.</div>
+    <div class="chip"><b>지방 신도심</b>인구는 안 느는데 아파트만 지어 원도심 공동화. 창원–부산 50km가 ‘마음의 거리 500km’ — 통근 전철은 늘 타당성 난항.</div>
+  </div>
+
+  <h3>생태계가 번성하는 세 가지 조건</h3>
+  <div class="chips">
+    <div class="chip"><b>종 다양성</b>단일 품종 감자에 의존한 아일랜드는 역병 하나로 100만 명이 굶어 죽었다.</div>
+    <div class="chip"><b>에너지와 물질의 순환</b>분해와 재생산으로 되돌아가야 생태계다. 순환이 끊기면 무너진다.</div>
+    <div class="chip"><b>개방성과 연결성</b>닫힌 생태계는 근친교배 우울증(합스부르크 신드롬)으로 취약해진다.</div>
+  </div>
+
+  <p class="orig"><a href="index.html#s1">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s2">
+  <span class="sec-label">SECTION 02</span>
+  <h2><span class="hl">산업 AX를 위한 지역 금융 — 돈</span></h2>
+  <p class="sec-one">공장은 지방에, 돈은 수도권에. 이 구조를 둔 채 산업 AX는 불가능하다.</p>
+
+  <div class="chart">
+    <div class="chart-title">공장은 지방에, 돈은 수도권에</div>
+    <div class="chart-sub">전체 대비 비수도권의 비중 (2025 금융위원회)</div>
+    <div class="bar-row ghost"><span class="lab">생산(GRDP)</span><div class="track"><div class="fill" style="width:95.4%"></div></div><span class="val">47.7%</span></div>
+    <div class="bar-row"><span class="lab">여신(대출)</span><div class="track"><div class="fill" style="width:69%"></div></div><span class="val">34.5%</span></div>
+    <div class="bar-row"><span class="lab">벤처 투자</span><div class="track"><div class="fill" style="width:49.4%"></div></div><span class="val">24.7%</span></div>
+    <div class="chart-note">격차 −13.2%p, 전년보다 오히려 확대</div>
+  </div>
+
+  <h3>모델 1 · 미국 노스다코타은행 — ‘은행들의 은행’</h3>
+  <ul class="sum">
+    <li>주정부의 모든 세금·수수료가 법으로 예치되는 안정 자본줄 (약 71억 달러)</li>
+    <li>소매 영업 대신 <strong>참여 대출</strong>로 지역 은행의 대출 능력을 키우는 파트너</li>
+    <li>지점 1개, 마케팅 제로 → ROI 15.8%, 100년 연속 흑자, 수익은 공공사업으로 환원</li>
+    <li>산업위원회 + 전문 경영인 체제로 정치 외풍 차단</li>
+  </ul>
+
+  <figure class="diagram">
+    <img src="images/viz5_d3_노스다코타순환.jpg" alt="주정부 예치금 → 노스다코타은행 → 참여 대출 → 지역 은행들 → 지역 경제 → 수익의 공공사업 환원으로 도는 순환 구조">
+  </figure>
+
+  <div class="chart">
+    <div class="chart-title">보수적으로 분산된 대출 포트폴리오</div>
+    <div class="chart-sub">특정 산업의 위기가 은행 전체로 번지지 않게</div>
+    <div class="stackbar">
+      <div class="sb1" style="width:38%">상업 38%</div>
+      <div class="sb2" style="width:34%">학자금 34%</div>
+      <div class="sb3" style="width:18%">주택 18%</div>
+      <div class="sb4" style="width:10%">10%</div>
+    </div>
+    <div class="sb-legend"><span><i class="sb1"></i>상업</span><span><i class="sb2"></i>학자금</span><span><i class="sb3"></i>주택</span><span><i class="sb4"></i>농업 10%</span></div>
+  </div>
+
+  <h3>모델 2 · 독일 슈파르카세 — 지역을 떠나지 못하는 돈</h3>
+  <ul class="sum">
+    <li><strong>지역주의 원칙</strong>: 법으로 해당 지역 안에서만 영업 — 예금이 수도권으로 새지 않는다</li>
+    <li><strong>관계 금융</strong>: 재무제표 대신 경영자 평판·기술 잠재력 같은 연성 정보로 심사</li>
+    <li><strong>하우스뱅크</strong>: 독일 중소기업 70%의 주거래은행 — 비 올 때 우산을 뺏지 않는다</li>
+    <li>결과: 히든 챔피언 1,500개, 그룹 신용등급 A+, 100년 무파산</li>
+  </ul>
+
+  <div class="tablewrap">
+    <table class="mx">
+      <thead><tr><th></th><th>한국 금융</th><th>독일 지역 금융</th></tr></thead>
+      <tbody>
+        <tr><th>심사</th><td>부동산 담보 · 신용점수</td><td>장기 신뢰 · 사업 지속 가능성</td></tr>
+        <tr><th>목적</th><td>주주 이익 — 수도권 대형 대출 집중</td><td>비영리 공공성 — 지역 공헌·산업 육성</td></tr>
+        <tr><th>구조</th><td>거대 은행의 중앙집권형</td><td>수백 개 독립 은행의 분권 연합체</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="orig"><a href="index.html#s2">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s3">
+  <span class="sec-label">SECTION 03</span>
+  <h2><span class="hl">지역 기반의 인재 생태계 — 사람</span></h2>
+  <ul class="sum">
+    <li>지역 거점 대학이 인재 양성의 중심 — 대학·기업·연구소가 한 팀으로</li>
+    <li>젊은 인재 양성 + 기존 인력의 리스킬링·업스킬링</li>
+    <li>대중교통 확충이 반드시 함께 — 맞벌이 부부가 살 수 있어야 생태계가 지속된다</li>
+  </ul>
+  <div class="callout">창원–부산 직선거리 50km, 마음의 거리 500km. 부부가 함께 살 수 없는 특구는 하나 마나 한 말이 된다.</div>
+  <p class="orig"><a href="index.html#s3">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s4">
+  <span class="sec-label">SECTION 04</span>
+  <h2><span class="hl">생태계 성장을 위한 데이터 공유 연대 — 데이터</span></h2>
+  <p class="sec-one">서방 제1의 제조창인 한국이 현장 데이터로 학습한 세계 최고의 피지컬 AI를 갖는 길. 지원 대상은 여섯 기준으로 고른다.</p>
+  <div class="chips numbered">
+    <div class="chip"><b>파급성·확산성</b>표준기업·공급망 중심·협회 주도 — 성공하면 즉시 복제되는 레퍼런스</div>
+    <div class="chip"><b>대표성·균형성</b>권역·업종·규모별 균형. 산업단지+거점대학+지역금융 삼각편대 우선</div>
+    <div class="chip"><b>실행 가능성</b>센서·저장장치, 실력 있는 현장 책임자, 실패에서 배우는 조직</div>
+    <div class="chip"><b>협업 우선</b>앵커기업이 협력사와 과제를 함께 설계하는 곳</div>
+    <div class="chip"><b>표준화 기여</b>데이터 스키마·룰 북을 산업 공용으로 내보낼 곳</div>
+    <div class="chip"><b>공공성·사회적 가치</b>에너지·안전사고·불량률을 줄이고 지역 일자리를 늘릴 곳</div>
+  </div>
+  <div class="callout">지원의 조건은 하나 — 성과를 공유하라. 한 기업의 성공이 곧 생태계의 성공이 되어야 한다.</div>
+  <p class="orig"><a href="index.html#s4">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s5">
+  <span class="sec-label">SECTION 05</span>
+  <h2><span class="hl">‘독파모’와 K-휴머노이드 연합 — 생태계로 도전한다</span></h2>
+  <p class="sec-one">모델 하나 만들기가 아니라 풀스택 생태계 전체에 도전한다. 처음부터 벤처·대기업·대학이 한 팀.</p>
+
+  <figure class="diagram">
+    <img src="images/viz5_d4_레이어케이크.jpg" alt="에너지, 칩·컴퓨팅 인프라, 클라우드 데이터센터, AI 모델, 애플리케이션의 5층 케이크. 위 4개 층이 독파모의 목표: 풀스택">
+    <figcaption>젠슨 황의 ‘5단 레이어 케이크’ — 독파모는 에너지를 뺀 네 층 전부가 목표</figcaption>
+  </figure>
+
+  <h3>독파모에 모델 회사만 있는 게 아니다 — 층위별 참여 생태계</h3>
+  <div class="tablewrap">
+    <table class="mx">
+      <thead><tr><th>층위</th><th>참여</th></tr></thead>
+      <tbody>
+        <tr><th>모델</th><td>LG · 업스테이지 · SKT · 네이버 · 엔씨</td></tr>
+        <tr><th>인프라·하드웨어</th><td>퓨리오사 · 리벨리온 · 래블업</td></tr>
+        <tr><th>데이터</th><td>플리토 · 셀렉트스타 · 에이아이웍스 · 라이너 · 네이버</td></tr>
+        <tr><th>서비스·산업 확산</th><td>한글과컴퓨터 · 올거나이즈 · 포스코 · 롯데 · 크래프톤 · 포티투닷</td></tr>
+        <tr><th>대학</th><td>모든 팀에 필수 — 1,000억+ 매개변수 학습 경험은 책으로 못 배운다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">시작 4개월 만에 전 세계 톱 20에 한국 모델 진입 — ‘주목할 만한 모델’엔 다섯 팀 전부.</div>
+
+  <h3>K-휴머노이드 연합 — 4개 컨소시엄 × 역할 매트릭스</h3>
+  <div class="stats">
+    <div class="stat"><span class="n">1<small>조 원+</small></span><span class="l">2030년까지 민관 투자</span></div>
+    <div class="stat"><span class="n">60<small>kg</small></span><span class="l">2028년 목표: 관절 50+ · 운반 20kg · 초속 2.5m</span></div>
+    <div class="stat"><span class="n">풀스택</span><span class="l">뇌(AI) + 몸(HW) + 심장·신경(배터리·반도체) 동시 개발</span></div>
+  </div>
+  <div class="tablewrap">
+    <table class="mx">
+      <thead><tr><th></th><th>가전 (LG)</th><th>물류 (CJ/삼성)</th><th>화학·정유 (SK)</th><th>조선 (HD현대)</th></tr></thead>
+      <tbody>
+        <tr><th>AI 두뇌</th><td>투모로로보틱스</td><td>투모로로보틱스</td><td>투모로로보틱스</td><td>투모로로보틱스 · 부산대</td></tr>
+        <tr><th>본체</th><td>로브로스</td><td>레인보우로보틱스</td><td rowspan="2">홀리데이로보틱스</td><td rowspan="2">에이로봇</td></tr>
+        <tr><th>손·모터</th><td>로보티즈 · 패러데이다이나믹스</td><td>에이딘로보틱스 · SPG</td></tr>
+        <tr><th>배터리</th><td>LG에너지솔루션</td><td>삼성SDI</td><td>—</td><td>삼성SDI</td></tr>
+        <tr><th>수요처(실증)</th><td>LG전자 스마트팩토리</td><td>CJ대한통운 · 롯데글로벌로지스</td><td>SK에너지 울산 정유공장</td><td>HD현대미포 · HD현대로보틱스</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="orig"><a href="index.html#s5">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s6">
+  <span class="sec-label">SECTION 06</span>
+  <h2><span class="hl">시대와 불화하는 제도들</span></h2>
+  <p class="sec-one">AI가 사람을 구할 수 있는 곳마다 같은 열쇠가 필요하다 — 데이터 통합. 그런데 제도가 시대와 불화한다.</p>
+
+  <div class="chips">
+    <div class="chip"><b>복지 사각지대</b>탈북 모자 아사, 송파 세 모녀 — 소득·건보·고용 데이터를 통합하면 선제 발굴이 가능했다</div>
+    <div class="chip"><b>재난 예방</b>산불·적조·강남 침수 — 기상·소방·지자체 데이터를 연결하면 예측과 사전 조치</div>
+    <div class="chip"><b>전세 사기</b>등기·거래·세금·개발 정보의 단절이 위험의 근원 — 통합하면 위법 의심 거래 자동 추출</div>
+    <div class="chip"><b>국회 의정 지원</b>1톤 트럭 분량의 종이 대신 전자유통 일원화 — 요약·과거 질의·해외 사례에 되먹임 학습까지</div>
+  </div>
+  <div class="callout">데이터 통합! 구슬처럼 흩어진 데이터를 꿰지 못하면 AI는 아주 비싼 장식품이 된다.</div>
+
+  <figure class="diagram">
+    <img src="images/viz5_d9_증기기관.jpg" alt="증기기관의 시대에 길드·왕정·면세특권이 무너졌듯, AI의 시대에 조달·교육과정·보안정책이 옛 질서로 남아 있다는 대비 그림">
+    <figcaption>증기기관이 길드·왕정·면세특권과 불화했듯 — AI는 조달·교육과정·보안정책과 불화한다</figcaption>
+  </figure>
+
+  <h3>낡은 제도 1 · 3년 6개월 걸리는 조달</h3>
+  <figure class="diagram">
+    <img src="images/viz5_d5_조달타임라인.jpg" alt="ISP 예산부터 개발까지 최소 3년 6개월이 걸리는 조달 타임라인과, 2달 만에 사용자 1억 명을 모은 챗GPT의 대비">
+    <figcaption>챗GPT를 제때 쓰려면 2019년에 예견했어야 했다 — 3년 6개월 전의 기획은 이미 낡은 이야기</figcaption>
+  </figure>
+
+  <h3>낡은 제도 2 · 7~10년 주기의 교육과정</h3>
+  <div class="tl">
+    <div class="row"><span class="yr">2022 개정</span><span>현행 교육과정 — <strong>챗GPT가 존재하지 않던 시절</strong>에 설계됨</span></div>
+    <div class="row"><span class="yr">2024~26</span><span>학년별 순차 적용 중 (올해 초1~6 · 중1~2 · 고1~2)</span></div>
+    <div class="row"><span class="yr">중3 · 고3</span><span>아직 <strong>2015 개정</strong> 적용 — 10년 전에 정한 과정으로 배운다</span></div>
+  </div>
+
+  <h3>낡은 제도 3 · 보안정책 — 공인인증서의 교훈</h3>
+  <p class="sec-one">1997년 OECD 암호화정책 8개 권고를 한국은 하나도 지키지 않았다.</p>
+  <div class="tablewrap">
+    <table class="mx">
+      <thead><tr><th>OECD 권고 (1997)</th><th>한국이 한 일</th></tr></thead>
+      <tbody>
+        <tr><td>법을 지키는 한 어떤 수단이든 선택 가능해야</td><td>공인인증서 하나만 강제 — 다른 수단은 제초제 뿌린 듯 고사</td></tr>
+        <tr><td>도구는 시장의 요구에 따라 발전해야</td><td>십수 년간 신기술이 설 자리 없음 — 안면·지문인식은 해외 차지</td></tr>
+        <tr><td>국제 호환 표준과 함께 발전해야</td><td>전자상거래 갈라파고스화 (‘천송이 코트’) — exe 파일로 갈아탄 게 개선책</td></tr>
+        <tr><td>제공자는 상응하는 책임을 져야</td><td>공인인증서만 쓰면 금융기관 면책 — 피해는 사용자 몫</td></tr>
+        <tr><td>국제 거래에 방해가 되지 않아야</td><td>치명적인 방해가 됐다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul class="sum">
+    <li>2026년에도 공무원은 모바일로 일할 수 없고 클라우드도 제대로 못 쓴다</li>
+    <li>취약점을 숨겨야 하는 정보기관(국정원)이 취약점을 제거하는 역할까지 — 목표가 상충 (미국은 NSA/CISA 분리)</li>
+    <li>“규정을 충족해야 클라우드를 쓸 수 있다”가 아니라 “클라우드를 쓰기 위해 보안규정이 발전해야 한다”</li>
+  </ul>
+  <div class="callout">질문이 틀린데 답이 맞을 순 없습니다.</div>
+  <p class="orig"><a href="index.html#s6">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s7">
+  <span class="sec-label">SECTION 07</span>
+  <h2><span class="hl">용역으로 AI 정부를 만들 수 있을까?</span></h2>
+  <p class="sec-one">2025년 대전 국가정보자원관리원 화재 — 종합대책 발표 1년 뒤에 벌어진 일.</p>
+
+  <div class="versus">
+    <div class="side">
+      <h5>약속</h5>
+      <ul>
+        <li>“재해복구시스템이 있어 금세 재가동”</li>
+        <li>“백업으로 3시간 내 가동”</li>
+        <li>“EMP 공격에도 버티는 공주 재해복구센터”</li>
+        <li>사고 1년 전 범정부 종합대책 발표</li>
+      </ul>
+    </div>
+    <div class="side">
+      <h5>현실</h5>
+      <ul>
+        <li>하나도 맞지 않았다</li>
+        <li>배터리를 격리하지 않았다 — 4년 전 카카오 사태 때 이미 지적된 것</li>
+        <li>건물이 무너져도 살아남는 게 재해복구다 (9·11의 모건스탠리)</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure class="diagram">
+    <img src="images/viz5_d6_카오스몽키.jpg" alt="카오스 몽키(서버 장애 주입), 카오스 고릴라(가용 영역 하나 중단), 카오스 콩(한 지역 전체 중단) — 그래도 서비스는 살아남는가?">
+    <figcaption>넷플릭스는 스스로 장애를 일으켜 시험한다 — 몽키·고릴라·콩</figcaption>
+  </figure>
+
+  <h3>왜 반복되는가 — 그리고 영국의 답</h3>
+  <ul class="sum">
+    <li>실패의 구조: IT 전문성 부족(고시+순환보직) · 거버넌스 부재(PRD 못 쓰는 간부) · 하청의 하청(반토막 예산) · 1~2년마다 바뀌는 운영사 → 아무도 히스토리를 모른다</li>
+    <li>영국도 같았다: NHS IT 96억→195억 달러, 500페이지 사이트에 연 7,700만 달러</li>
+    <li>답: 시빅 해커 등 민간 최고 엔지니어로 <strong>GDS</strong>를 만들고 ‘처음부터 디지털’ — 디자인 10원칙 공개</li>
+  </ul>
+
+  <div class="chips numbered">
+    <div class="chip"><b>사용자 요구에서 시작하라</b></div>
+    <div class="chip"><b>덜 하라</b></div>
+    <div class="chip"><b>데이터로 설계하라</b></div>
+    <div class="chip"><b>단순하게 만들기 위해 애쓰고 애써라</b></div>
+    <div class="chip"><b>반복하라, 또 반복하라</b></div>
+    <div class="chip"><b>이것은 모두를 위한 것이다</b></div>
+    <div class="chip"><b>맥락을 이해하라</b></div>
+    <div class="chip"><b>웹사이트가 아니라 서비스를 구축하라</b></div>
+    <div class="chip"><b>일관성을 유지하되 획일적이지 마라</b></div>
+    <div class="chip"><b>공개하라, 그것이 더 좋게 만든다</b></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="n">1,882→1</span><span class="l">정부 사이트를 GOV.UK 하나로 (1년 내 출시)</span></div>
+    <div class="stat"><span class="n">−70<small>%</small></span><span class="l">운영비 즉각 절감</span></div>
+    <div class="stat"><span class="n">5.8<small>조 원</small></span><span class="l">3년간 절감 (35.6억 파운드)</span></div>
+    <div class="stat"><span class="n">UN 1<small>위</small></span><span class="l">5년 내 전자정부 1위 + 올해의 디자인상</span></div>
+  </div>
+  <div class="callout">‘진화가 아니라 혁명을!’ — 용역으로는 AI 정부를 만들 수 없다.</div>
+  <p class="orig"><a href="index.html#s7">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s8">
+  <span class="sec-label">SECTION 08</span>
+  <h2><span class="hl">AI 기본사회</span></h2>
+  <p class="sec-one">생산성은 치솟는데 그대로 두면 일자리는 사라지고 부는 소수에 집중된다 — 축복을 가장한 저주.</p>
+
+  <figure class="diagram">
+    <img src="images/viz5_d8_액화노동.jpg" alt="법과 제도의 성긴 그물 위에 선 온전한 한 사람 몫의 노동이, 그물 아래로는 물방울이 되어 흘러내리는 액화노동 은유 그림">
+    <figcaption>이승윤 《보이지 않는 노동자들》의 ‘액화노동’ — AI는 노동의 분절을 더 가속한다</figcaption>
+  </figure>
+
+  <div class="q">“지능의 시대의 결정적 특징은 대대적 번영이 될 것” <cite>— 샘 올트먼</cite></div>
+  <div class="q">“AI와 로봇이 모든 필요를 충족하면 돈은 더 이상 필요 없다” <cite>— 일론 머스크</cite></div>
+
+  <h3>그러나 — 재분배가 저절로 온 적은 한 번도 없다</h3>
+  <div class="tl">
+    <div class="row"><span class="yr">1930년대</span><span>뉴딜 — 대공황과 공산주의의 위협이 배경</span></div>
+    <div class="row"><span class="yr">해방 후</span><span>한국·대만의 토지 재분배 — 역시 위협에 대한 대응</span></div>
+    <div class="row"><span class="yr">1945~70s</span><span>복지국가 — 전후 재건과 냉전 체제</span></div>
+    <div class="row"><span class="yr">최근 40년</span><span>IT 혁명에도 노동소득분배율은 하락 — 극우 물결의 토양</span></div>
+  </div>
+  <ul class="sum">
+    <li>지금은 더 어렵다: 국제 협력 형해화, 미중 갈등, 조세 천국</li>
+    <li>프랑스의 3% 디지털세는 미국의 25% 보복 관세 앞에 철회됐다 (5개국 모두) — 3%도 못 걷는데 AI세는?</li>
+    <li>인공지능은 지금 <strong>불공평한 증폭기</strong>로 작동하고 있다</li>
+  </ul>
+  <p class="orig"><a href="index.html#s8">이 섹션 원문 전문 읽기 →</a></p>
+</section>
+
+<section id="s9">
+  <span class="sec-label">SECTION 09</span>
+  <h2><span class="hl">여주 구양리와 신안군 — AI 기본사회의 살아 있는 모델</span></h2>
+
+  <div class="tablewrap">
+    <table class="mx">
+      <thead><tr><th></th><th>신안군 태양광 연금</th><th>여주 구양리 햇빛두레</th></tr></thead>
+      <tbody>
+        <tr><th>방식</th><td>태양광·풍력에 주민 지분 30% 의무화</td><td>64가구 전체 참여, 100% 주민 소유 (1MW)</td></tr>
+        <tr><th>정부 재원</th><td>0원</td><td>보조금 0원 (15억 투자, 장기저리 융자 포함)</td></tr>
+        <tr><th>성과</th><td>누적 300억+ · 군민 49% 수혜 · 연 최대 600만 원</td><td>연 1.2억 — 마을 점심 무료, 마을버스 무료</td></tr>
+        <tr><th>파급</th><td>2028 해상풍력 완공 시 전 군민 연 600만 원, 인구 179→710명</td><td>대부분의 마을이 복제 가능한 모델</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="diagram">
+    <img src="images/viz5_d7_태양광AI.jpg" alt="태양광 마을(주민 지분 → 태양광 연금)의 원리를 AI 인프라(국부펀드 → 전 국민 배당)로 확장하는 그림">
+  </figure>
+
+  <h3>같은 원리를 AI로 확장하면</h3>
+  <div class="chips">
+    <div class="chip"><b>AI 인프라 국부펀드</b>태양광에 투자하듯 AI 인프라에 투자하고, 수익을 전 국민이 배당으로</div>
+    <div class="chip"><b>데이터 사용료</b>공공·회색지대 데이터는 공유자원 — 한국인의 데이터를 쓰면 사용료를</div>
+    <div class="chip"><b>공유자원의 재정의</b>국공유지 25.6%로 사회주택 리츠(연 4%대) · 연 8,000억을 보전해주는 버스는 공영제로 — 노선을 수요에 맞춰 조정</div>
+  </div>
+
+  <div class="closing">
+    AI는 천재지변이 아닙니다. 우리가 만들어가는 것이고, 우리가 결정할 수 있는 것이어야 합니다. 신안군과 구양리는 살아 있는 증거입니다. 제국주의 경험 없이 선진국이 된 유일한 나라, 풀스택과 피지컬 AI에 도전할 수 있는 나라가 전 세계에 포용적 AI의 모범을 보여줄 수 있습니다. <span class="hl"><strong>함께 애를 씁시다.</strong></span>
+  </div>
+
+  <p class="orig"><a href="index.html#s9">이 섹션 원문 전문 읽기 →</a></p>
+  <div class="top-link"><a href="#top">↑ 맨 위로</a></div>
+</section>
+
+</main>
+</body>
+</html>
